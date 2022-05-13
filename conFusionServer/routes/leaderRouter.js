@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+var authenticate = require('../authenticate');
 
 const Leaders = require('../models/leaders');
 
@@ -18,7 +19,7 @@ leaderRouter.route('/')
         }, (err) => next(err))
         .catch((err)=>next(err));
 })
-.post((req, res, next) => {
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Leaders.create(req.body)
         .then((leader)=>{
             console.log('Leader created', leader);
@@ -50,7 +51,7 @@ leaderRouter.route('/:leaderId')
     res.statusCode = 403;
     res.end('POST operation not supported on /leaders/'+req.params.leaderId);
 })
-.put((req, res, next) => {
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Leaders.findByIdAndUpdate(req.params.leaderId, {
         $set: req.body
     }, { new: true })

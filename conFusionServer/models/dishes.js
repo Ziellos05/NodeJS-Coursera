@@ -35,6 +35,10 @@ const dishSchema = new Schema(
       type: Boolean,
       default:false      
   },
+  favorites: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Favorite' 
+  },
   comments: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Comment'      
